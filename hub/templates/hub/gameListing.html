@@ -1,4 +1,270 @@
-{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NBA Game List</title>
+    <style>
+        /* Improved CSS with NBA theme */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('nbahoopmetrics-final-background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            color: #1d428a; /* NBA blue */
+            margin-bottom: 10px;
+            font-size: 2.2rem;
+        }
+        
+        h2 {
+            color: #c8102e; /* NBA red */
+            margin: 25px 0 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #ffb81c; /* NBA gold accent */
+        }
+        
+        h3 {
+            color: #555;
+            font-weight: normal;
+            line-height: 1.5;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        th, td {
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 1px solid #eaeaea;
+        }
+        
+        th {
+            background-color: #1d428a; /* NBA blue */
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+        
+        tr:hover {
+            background-color: rgba(29, 66, 138, 0.05);
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9fafb;
+        }
+        
+        form {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 25px;
+            border: none;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 0;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #1d428a; /* NBA blue */
+        }
+        
+        input[type="date"],
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e5eb;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        input[type="date"]:focus,
+        input[type="text"]:focus {
+            border-color: #c8102e; /* NBA red */
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(200, 16, 46, 0.2);
+        }
+        
+        button {
+            background-color: #c8102e; /* NBA red */
+            color: white;
+            border: none;
+            padding: 14px 25px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            grid-column: 1 / -1;
+            justify-self: center;
+            min-width: 200px;
+            letter-spacing: 0.5px;
+        }
+        
+        button:hover {
+            background-color: #a50d27;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+        
+        .winning-team {
+            font-weight: bold;
+            color: #1d428a; /* NBA blue */
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+            
+            form {
+                grid-template-columns: 1fr;
+                padding: 20px;
+            }
+            
+            th, td {
+                padding: 10px 12px;
+                font-size: 0.9rem;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>NBA HoopMetrics Analytics</h1>
+            <h3>Enter Start Date, End Date and Team Name to view team wins and game results</h3>
+        </header>
+        
+        <form method="GET">
+            <div class="form-group">
+                <label for="start_date">Start Date:</label>
+                <input type="date" id="start_date" name="start_date" value="" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="end_date">End Date:</label>
+                <input type="date" id="end_date" name="end_date" value="" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="team_name">Team Name:</label>
+                <input type="text" id="team_name" name="team_name" placeholder="e.g. Lakers, Warriors..." value="">
+            </div>
+            
+            <button type="submit">Get Stats</button>
+        </form>
+        
+        <!-- Example of how the winning stats would appear -->
+        <h2>Team Wins</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Team</th>
+                    <th>Wins</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Lakers</td>
+                    <td>12</td>
+                </tr>
+                <tr>
+                    <td>Celtics</td>
+                    <td>10</td>
+                </tr>
+                <tr>
+                    <td>Warriors</td>
+                    <td>8</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <!-- Example of how the game list would appear -->
+        <h2>Game Results</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Home</th>
+                    <th>Away</th>
+                    <th>Home Score</th>
+                    <th>Away Score</th>
+                    <th>Winner</th>
+                    <th>Post Season</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>2023-05-10</td>
+                    <td>Lakers</td>
+                    <td>Warriors</td>
+                    <td>112</td>
+                    <td>105</td>
+                    <td class="winning-team">Lakers</td>
+                    <td>Yes</td>
+                </tr>
+                <tr>
+                    <td>2023-05-08</td>
+                    <td>Celtics</td>
+                    <td>76ers</td>
+                    <td>102</td>
+                    <td>98</td>
+                    <td class="winning-team">Celtics</td>
+                    <td>Yes</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
+
+
+<!-- {% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -77,4 +343,4 @@
 {% endblock %}
 
 </body>
-</html>
+</html> -->
