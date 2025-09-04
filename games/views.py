@@ -8,7 +8,6 @@ def game_listing(request):
     return_game_list = []
     winning_stats = {}
     
-    # Get filter parameters from request
     start_date = request.GET.get("start_date")
     end_date = request.GET.get("end_date")
     team_name = request.GET.get("team_name", "").strip()
@@ -29,7 +28,7 @@ def game_listing(request):
             for game in game_list:
                 if team_name and (team_name.lower() not in game["home_team"]["full_name"].lower() and
                                   team_name.lower() not in game["visitor_team"]["full_name"].lower()):
-                    continue  # Skip games that don't involve the specified team
+                    continue 
                 
                 game_dict = {
                     "date": game["date"],
